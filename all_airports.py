@@ -2,7 +2,6 @@ import csv
 from airport import Airport
 from math import radians, sin, cos, atan2, sqrt
 
-
 class AllAirports:
     def __init__(self) -> None:
         self.airports = None
@@ -33,13 +32,17 @@ class AllAirports:
             try:
                 for line in lines:
                     country = line[3]
+                    if country not in country_currency:
+                        continue
                     currency = country_currency[country]
+                    if currency not in currency_rates:
+                        continue
                     rate = currency_rates[currency]
                     airports[line[4]] = Airport(line[4], line[1], line[2], line[3], line[6], line[7], rate)
             except KeyError as e:
                 print('key not found', e)
 
-            self.airports = airports
+            self.airports  = airports
             # for airport in airports.items():
             #     print(airport)
 
@@ -47,8 +50,7 @@ class AllAirports:
         radius = 6371
         lat_diff = radians(lat1 - lat2)
         lon_diff = radians(lon1 - lon2)
-        a = (sin(lat_diff / 2) * sin(lat_diff / 2) + cos(radians(lat1)) * cos(radians(lat2)) * sin(lon_diff / 2) * sin(
-            lon_diff / 2))
+        a = (sin(lat_diff / 2) * sin(lat_diff / 2) + cos(radians(lat1)) * cos(radians(lat2)) * sin(lon_diff / 2) * sin(lon_diff / 2))
         c = 2 * atan2(sqrt(a), sqrt(1 - a))
         distance = radius * c
         return distance
@@ -64,7 +66,6 @@ class AllAirports:
         airport1 = self.airports[start]
         fare = distance * airport1.rate
         return fare
-
 
 world_tour = AllAirports()
 fare = world_tour.get_ticket_price('DAC', 'PRA')
